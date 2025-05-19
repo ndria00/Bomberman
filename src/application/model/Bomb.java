@@ -9,7 +9,6 @@ public class Bomb extends GameObject implements Runnable{
         super(position);
         this.timeLeft = Settings.BOMB_TIMER;
     }
-
     private synchronized void tick(){
         timeLeft -= 1;
     }
@@ -22,6 +21,9 @@ public class Bomb extends GameObject implements Runnable{
     public synchronized void explode(){
         timeLeft = 0;
     }
+    public synchronized void setTimeLeft(int timeLeft){
+        this.timeLeft = timeLeft;
+    }
     @Override
     public void run() {
         while(timeLeft > 0){
@@ -32,6 +34,5 @@ public class Bomb extends GameObject implements Runnable{
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Bomb exited run method");
     }
 }

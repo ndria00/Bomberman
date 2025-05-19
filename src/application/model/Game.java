@@ -25,12 +25,6 @@ public class Game {
     public void updatePlayerDirection(int direction){
         world.updatePlayerDirection(direction);
     }
-    public void stopPlayer(){
-        world.getPlayer().setStopAfterMove(true);
-    }
-    public void movePlayer(){
-        world.movePlayer();
-    }
     public World getWorld(){
         return world;
     }

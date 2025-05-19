@@ -9,60 +9,60 @@ import java.awt.event.KeyEvent;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GameController extends KeyAdapter {
 
     GamePanel gamePanel;
     List<Integer> directions;
+    Map<Integer, Integer> keyToDirections;
 
     public GameController(GamePanel gamePanel){
         this.gamePanel = gamePanel;
         directions = new ArrayList<>();
+        keyToDirections = Map.ofEntries(
+                Map.entry(KeyEvent.VK_UP, Settings.DIRECTION_UP),
+                Map.entry(KeyEvent.VK_RIGHT, Settings.DIRECTION_RIGHT),
+                Map.entry(KeyEvent.VK_DOWN, Settings.DIRECTION_DOWN),
+                Map.entry(KeyEvent.VK_LEFT, Settings.DIRECTION_LEFT));
     }
-
 
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
             System.exit(0);
-        Game.getInstance().updatePlayerDirection(directionFromButton(e));
         if(e.getKeyCode() == KeyEvent.VK_B)
             Game.getInstance().placeBomb();
+        else if(keyToDirections.containsKey(e.getKeyCode())){
+            int direction = directionFromButton(e);
+            if(!directions.contains(direction))
+                directions.add(direction);
+            Game.getInstance().updatePlayerDirection(direction);
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_B)
-            return;
-
-        int direction = directionFromButton(e);
-        directions.removeIf(n -> n == direction);
-        if(directions.isEmpty()){
-            //System.out.println("Stopping player since direction vector is empty: ");
-            Game.getInstance().stopPlayer();
-//            Game.getInstance().getWorld().getPlayer().setMoving(false);
-        }
-        else{
-            Game.getInstance().updatePlayerDirection(directions.getLast());
-            //System.out.println("Updating player direction to direction last: " + directions.getLast() + " size is " + directions.size());
+        if(keyToDirections.containsKey(e.getKeyCode())){
+            int direction = directionFromButton(e);
+            directions.removeIf(n -> n == direction);
+            if(directions.isEmpty()){;
+                Game.getInstance().updatePlayerDirection(Settings.DIRECTION_IDLE);
+            }
+            else{
+                Game.getInstance().updatePlayerDirection(directions.getLast());
+            }
         }
     }
 
     private int directionFromButton(KeyEvent e){
-        int direction = switch (e.getKeyCode()){
-            case KeyEvent.VK_LEFT ->  direction = Settings.DIRECTION_LEFT;
-            case KeyEvent.VK_UP ->  direction = Settings.DIRECTION_UP;
-            case KeyEvent.VK_RIGHT ->  direction = Settings.DIRECTION_RIGHT;
-            case KeyEvent.VK_DOWN ->  direction = Settings.DIRECTION_DOWN;
+        return  switch (e.getKeyCode()){
+            case KeyEvent.VK_LEFT ->  Settings.DIRECTION_LEFT;
+            case KeyEvent.VK_UP ->  Settings.DIRECTION_UP;
+            case KeyEvent.VK_RIGHT ->  Settings.DIRECTION_RIGHT;
+            case KeyEvent.VK_DOWN ->  Settings.DIRECTION_DOWN;
             default -> Settings.DIRECTION_IDLE;
         };
-        if(direction != Settings.DIRECTION_IDLE){
-            Game.getInstance().getWorld().getPlayer().setMoving(true);
-            if(directions.isEmpty() || directions.getLast()  != direction){
-                if(!directions.contains(direction) )directions.add(direction);
-            }
-        }
-        return direction;
     }
     public void update(){
         Game.getInstance().update();

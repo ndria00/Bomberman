@@ -55,6 +55,7 @@ public class World {
 
         for(Position p : toRemoveBombs){
             bombs.remove(p);
+            player.addBomb();
         }
         toRemoveBombs.clear();
     }
@@ -74,13 +75,15 @@ public class World {
     }
 
     public void createBomb(){
-
-        Position pos = player.getPosition();
-        if(grid[pos.x()][pos.y()] == BlockType.PLAYER && bombs.get(player.getPosition()) == null && player.getBombsLeft() > 0){
-            Bomb bomb = new Bomb(new Position(pos.x(), pos.y()));
-            bombs.put(bomb.getPosition(), bomb);
-            Thread t = new Thread(bomb);
-            t.start();
+        if(player.getBombsLeft() > 0 && bombs.get(player.getPosition()) == null){
+            Position pos = player.getPosition();
+            if (grid[pos.x()][pos.y()] == BlockType.PLAYER && bombs.get(player.getPosition()) == null && player.getBombsLeft() > 0) {
+                Bomb bomb = new Bomb(new Position(pos.x(), pos.y()));
+                bombs.put(bomb.getPosition(), bomb);
+                Thread t = new Thread(bomb);
+                t.start();
+            }
+            player.useBomb();
         }
     }
 

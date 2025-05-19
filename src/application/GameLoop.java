@@ -19,6 +19,6 @@ public class GameLoop {
         if(executorService != null)
             return;
         executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(controller::update, 0, 250, TimeUnit.MILLISECONDS);
+        executorService.scheduleAtFixedRate(controller::update, 0, 200, TimeUnit.MILLISECONDS);
     }
 }
