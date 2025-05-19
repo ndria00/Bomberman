@@ -27,6 +27,7 @@ public class World {
                 grid[i][j] = BlockType.EMPTY;
             }
         }
+        //TODO generate map
         grid[0][0] = BlockType.PLAYER;
         grid[0][5] = BlockType.BOX;
         grid[0][4] = BlockType.BOX;
@@ -47,11 +48,17 @@ public class World {
         explodeBombs();
     }
     public void explodeBombs(){
-        for(Bomb b : bombs.values()){
-            if(b.isExploded() && ! toRemoveBombs.contains(b.getPosition())) {
-                bombExploded(b);
+        boolean exploded;
+        do{
+            exploded = false;
+            for(Bomb b : bombs.values()){
+                if(b.isExploded() && !toRemoveBombs.contains(b.getPosition())){
+                    bombExploded(b);
+                    toRemoveBombs.add(b.getPosition());
+                    exploded = true;
+                }
             }
-        }
+        }while(exploded);
 
         for(Position p : toRemoveBombs){
             bombs.remove(p);
@@ -88,20 +95,18 @@ public class World {
     }
 
     public void bombExploded(Bomb b){
-        toRemoveBombs.add(b.getPosition());
-        b.explode();
         Position pos = b.getPosition();
         int start = Math.max(pos.x() - Settings.BOMB_RADIUS, 0);
         int end = Math.min(pos.x() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE);
         for(int i = pos.x(); i < end; ++i){
             Position cell = new Position(i, pos.y());
-            if(simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
                 break;
         }
 
         for(int i = pos.x(); i >= start; --i){
             Position cell = new Position(i, pos.y());
-            if(simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
                 break;
         }
 
@@ -109,21 +114,19 @@ public class World {
         end = Math.min(pos.y() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE);
         for(int i = pos.y(); i < end; ++i){
             Position cell = new Position(pos.x(), i);
-            if(simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
                 break;
         }
         for(int i = pos.y(); i >= start; --i){
             Position cell = new Position(pos.x(), i);
-            if(simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
                 break;
         }
     }
 
     private boolean simulateExplosion(Position pos){
-        if(bombs.get(pos) != null && !toRemoveBombs.contains(pos)) {
-            grid[pos.x()][pos.y()] = BlockType.EMPTY;
-            toRemoveBombs.add(pos);
-            bombExploded(bombs.get(pos));
+        if(bombs.get(pos) != null && !toRemoveBombs.contains(pos)){
+            bombs.get(pos).explode();
             return true;
         }
         boolean boxHit = grid[pos.x()][pos.y()] == BlockType.BOX;

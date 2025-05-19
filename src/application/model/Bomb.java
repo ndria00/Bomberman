@@ -21,9 +21,6 @@ public class Bomb extends GameObject implements Runnable{
     public synchronized void explode(){
         timeLeft = 0;
     }
-    public synchronized void setTimeLeft(int timeLeft){
-        this.timeLeft = timeLeft;
-    }
     @Override
     public void run() {
         while(timeLeft > 0){
