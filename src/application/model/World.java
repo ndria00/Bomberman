@@ -100,13 +100,13 @@ public class World {
         int end = Math.min(pos.x() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE);
         for(int i = pos.x(); i < end; ++i){
             Position cell = new Position(i, pos.y());
-            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && stopAfterCell(cell))
                 break;
         }
 
         for(int i = pos.x(); i >= start; --i){
             Position cell = new Position(i, pos.y());
-            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && stopAfterCell(cell))
                 break;
         }
 
@@ -114,17 +114,17 @@ public class World {
         end = Math.min(pos.y() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE);
         for(int i = pos.y(); i < end; ++i){
             Position cell = new Position(pos.x(), i);
-            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && stopAfterCell(cell))
                 break;
         }
         for(int i = pos.y(); i >= start; --i){
             Position cell = new Position(pos.x(), i);
-            if(!cell.equals(b.getPosition()) && simulateExplosion(cell))
+            if(!cell.equals(b.getPosition()) && stopAfterCell(cell))
                 break;
         }
     }
 
-    private boolean simulateExplosion(Position pos){
+    private boolean stopAfterCell(Position pos){
         if(bombs.get(pos) != null && !toRemoveBombs.contains(pos)){
             bombs.get(pos).explode();
             return true;

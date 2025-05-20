@@ -1,6 +1,8 @@
 package application;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.Map;
 
 public class Settings {
     public static final int WINDOW_SIZE = 600;
@@ -17,5 +19,11 @@ public class Settings {
     public static final int BOMB_RADIUS = 3;
 
     public static final Font TEXT_FONT = new Font("SansSerif", Font.BOLD, 20);
+
+    public static final Map<Integer, Integer> keyToDirections = Map.ofEntries(
+            Map.entry(KeyEvent.VK_UP, Settings.DIRECTION_UP),
+            Map.entry(KeyEvent.VK_RIGHT, Settings.DIRECTION_RIGHT),
+            Map.entry(KeyEvent.VK_DOWN, Settings.DIRECTION_DOWN),
+            Map.entry(KeyEvent.VK_LEFT, Settings.DIRECTION_LEFT));
 
 }
