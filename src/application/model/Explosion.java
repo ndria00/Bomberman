@@ -1,17 +1,13 @@
 package application.model;
 
-public class Explosion {
-    private Position position;
+public class Explosion extends GameObject {
     private int timeLeft;
 
     public Explosion(Position position, int timeLeft) {
-        this.position = position;
+        super(position);
         this.timeLeft = timeLeft;
     }
 
-    public Position getPosition() {
-        return position;
-    }
 
     public int getTimeLeft() {
         return timeLeft;

@@ -1,7 +1,6 @@
 package application.view;
 
 import application.Settings;
-import application.controller.GameController;
 import application.model.*;
 
 import javax.swing.*;
@@ -9,15 +8,12 @@ import java.awt.*;
 
 public class GamePanel extends JPanel {
 
-    private ImagesHandler gameView;
+    private ImagesHandler imagesHandler;
 
     public GamePanel(){
-        gameView = new ImagesHandler();
+        imagesHandler = new ImagesHandler();
     }
 
-    public void setController(GameController controller){
-        this.addKeyListener(controller);
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -28,28 +24,16 @@ public class GamePanel extends JPanel {
             for(int j = 0; j < world.getSize(); ++j){
                 x = i * Settings.CELL_WIDTH;
                 y = j * Settings.CELL_WIDTH;
-                switch (world.getTypeAt(new Position(i,j))){
-                    case BOX -> {
-                        g.setColor(Color.green);
-                        g.drawImage(gameView.getImage(World.BlockType.BOX), x, y, null);
-                    }
-                    case WALL -> {
-                        g.setColor(Color.gray);
-                        g.fillRect(x, y, Settings.CELL_WIDTH, Settings.CELL_WIDTH);
-                        g.drawImage(gameView.getImage(World.BlockType.WALL), x, y, null);
-                    }
-                    case EMPTY -> {
-                        g.setColor(Color.lightGray);
-                        g.drawImage(gameView.getImage(World.BlockType.EMPTY), x, y, null);
-                    }
-                }
+                World.BlockType cellType = world.getTypeAt(new Position(i,j));
+                if(cellType == World.BlockType.BOX || cellType == World.BlockType.EMPTY || cellType == World.BlockType.WALL)
+                    g.drawImage(imagesHandler.getImage(cellType), x, y, null);
             }
         }
 
         for(Bomb b : Game.getInstance().getWorld().getBombs().values()){
             x = b.getPosition().x() * Settings.CELL_WIDTH;
             y = b.getPosition().y() * Settings.CELL_WIDTH;
-            g.drawImage(gameView.getImage(World.BlockType.BOMB), x, y, null);
+            g.drawImage(imagesHandler.getImage(World.BlockType.BOMB), x, y, null);
             int timeLeft = b.getTimeLeft();
 
             if(timeLeft >= 6)
@@ -64,17 +48,17 @@ public class GamePanel extends JPanel {
             g.drawString(String.valueOf(b.getTimeLeft()), x + Settings.CELL_WIDTH / 2 - width, y + Settings.CELL_WIDTH / 2);
         }
         //paint explosions
-        for(Explosion effect : Game.getInstance().getWorld().getExplosions()){
-            Position pos = effect.getPosition();
+        for(Explosion explosion : Game.getInstance().getWorld().getExplosions()){
+            Position pos = explosion.getPosition();
             x = pos.x() * Settings.CELL_WIDTH;
             y = pos.y() * Settings.CELL_WIDTH;
-            g.drawImage(gameView.getImage(World.BlockType.EXPLOSION), x, y, null);
+            g.drawImage(imagesHandler.getImage(World.BlockType.EXPLOSION), x, y, null);
         }
         //paint player
         Position playerPos = Game.getInstance().getWorld().getPlayer().getPosition();
         x = playerPos.x() * Settings.CELL_WIDTH;
         y = playerPos.y() * Settings.CELL_WIDTH;
-        g.drawImage(gameView.getImage(World.BlockType.PLAYER), x, y, null);
+        g.drawImage(imagesHandler.getImage(World.BlockType.PLAYER), x, y, null);
 
 
     }

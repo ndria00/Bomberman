@@ -26,5 +26,5 @@ public class Settings {
             Map.entry(KeyEvent.VK_DOWN, Settings.DIRECTION_DOWN),
             Map.entry(KeyEvent.VK_LEFT, Settings.DIRECTION_LEFT));
 
-    public static final int EXPLOSION_EFFECT_DURATION = 10;
+    public static final int EXPLOSION_DURATION = 10;
 }

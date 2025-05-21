@@ -99,7 +99,7 @@ public class World {
     public void createBomb(){
         if(player.getBombsLeft() > 0 && bombs.get(player.getPosition()) == null){
             Position pos = player.getPosition();
-            if (grid[pos.x()][pos.y()] == BlockType.PLAYER && bombs.get(player.getPosition()) == null && player.getBombsLeft() > 0) {
+            if(bombs.get(player.getPosition()) == null) {
                 Bomb bomb = new Bomb(new Position(pos.x(), pos.y()));
                 bombs.put(bomb.getPosition(), bomb);
                 Thread t = new Thread(bomb);
@@ -111,7 +111,7 @@ public class World {
 
     public void bombExploded(Bomb b){
         Position pos = b.getPosition();
-        explosions.add(new Explosion(pos, Settings.EXPLOSION_EFFECT_DURATION));
+        explosions.add(new Explosion(pos, Settings.EXPLOSION_DURATION));
         int start = Math.max(pos.x() - Settings.BOMB_RADIUS, 0);
         int end = Math.min(pos.x() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE-1);
         for(int i = pos.x(); i <= end; ++i){
@@ -141,7 +141,7 @@ public class World {
     }
 
     private boolean stopAfterCell(Position pos){
-        if(getTypeAt(pos) != BlockType.WALL) explosions.add(new Explosion(pos, Settings.EXPLOSION_EFFECT_DURATION));
+        if(getTypeAt(pos) != BlockType.WALL) explosions.add(new Explosion(pos, Settings.EXPLOSION_DURATION));
         if(bombs.get(pos) != null && !toRemoveBombs.contains(pos)){
             bombs.get(pos).explode();
             return true;

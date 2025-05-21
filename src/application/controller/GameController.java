@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class GameController extends KeyAdapter {
 
-    GamePanel gamePanel;
-    List<Integer> directions;
+    private GamePanel gamePanel;
+    private List<Integer> directions;
 
     public GameController(){
         directions = new ArrayList<>();
