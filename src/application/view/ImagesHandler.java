@@ -5,15 +5,14 @@ import application.model.World;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameView {
+public class ImagesHandler {
     private static String RESOURCE_PATH = "/application/resources/";
     private Map<World.BlockType, Image> ojbectToImage;
 
-    public GameView() {
+    public ImagesHandler() {
         ojbectToImage = new HashMap<>();
         try{
             ojbectToImage.put(World.BlockType.BOMB, ImageIO.read(getClass().getResource(RESOURCE_PATH + "bomb.png")));

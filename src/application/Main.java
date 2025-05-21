@@ -12,10 +12,8 @@ import java.awt.event.MouseEvent;
 
 public class Main {
     public static void main(String[] args) {
-        GamePanel gamePanel = new GamePanel();
-        GameController gameController = new GameController(gamePanel);
-        gamePanel.setController(gameController);
-        GameFrame frame = new GameFrame(gamePanel);
+        GameController gameController = new GameController();
+        GameFrame frame = new GameFrame(gameController);
         frame.setVisible(true);
         GameLoop gameLoop = new GameLoop(gameController);
         gameLoop.startGame();

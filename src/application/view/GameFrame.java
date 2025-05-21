@@ -1,6 +1,7 @@
 package application.view;
 
 import application.Settings;
+import application.controller.GameController;
 
 import javax.swing.*;
 import javax.tools.Tool;
@@ -9,9 +10,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GameFrame extends JFrame {
+    private GamePanel gamePanel;
 
-    public GameFrame(GamePanel gamePanel){
+    public GameFrame(GameController controller){
         setSize(Settings.WINDOW_SIZE, Settings.WINDOW_SIZE);
+        gamePanel = new GamePanel();
+        controller.setGamePanel(gamePanel);
         add(gamePanel);
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();

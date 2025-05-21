@@ -11,6 +11,7 @@ public class World {
     private int size;
     private Map<Position, Bomb> bombs;
     private Set<Position> toRemoveBombs;
+    private List<Explosion> explosions;
 
     public World(){
         size = Settings.WORLD_SIZE;
@@ -18,21 +19,25 @@ public class World {
         player = new Player(new Position(0,0));
         bombs = new HashMap<>();
         toRemoveBombs = new HashSet<>();
-        loadMap();
+        createMap();
+        explosions = new ArrayList<>();
     }
 
-    public void loadMap(){
+    public void createMap(){
         for(int i = 0; i < size; ++i){
             for(int j = 0; j < size; ++j){
-                grid[i][j] = BlockType.EMPTY;
+                if(i != 0 && j != 0 && i != size-1 && j != size-1){
+                    if(i % 2 == 0 && j % 2 != 0)
+                        grid[i][j] = BlockType.WALL;
+                    else if( i % 2 != 0 && j % 2 != 0)
+                        grid[i][j] = BlockType.BOX;
+                    else
+                        grid[i][j] = BlockType.EMPTY;
+                }
+                else grid[i][j] = BlockType.EMPTY;
             }
         }
-        //TODO generate map
         grid[0][0] = BlockType.PLAYER;
-        grid[0][5] = BlockType.BOX;
-        grid[0][4] = BlockType.BOX;
-        grid[0][7] = BlockType.WALL;
-        grid[0][8] = BlockType.BOX;
     }
 
     public boolean isPositionValid(Position position){
@@ -46,6 +51,7 @@ public class World {
     public void update(){
         movePlayer();
         explodeBombs();
+        tickExplosions();
     }
     public void explodeBombs(){
         boolean exploded;
@@ -76,7 +82,16 @@ public class World {
             }
         }
     }
-
+    public void tickExplosions(){
+        List<Explosion> toRemoveExplosions = new ArrayList<>();
+        for(Explosion explosion : explosions){
+            explosion.tick();
+            if(explosion.getTimeLeft() <= 0)
+                toRemoveExplosions.add(explosion);
+        }
+        for(Explosion explosion : toRemoveExplosions)
+            explosions.remove(explosion);
+    }
     public void updatePlayerDirection(int direction){
         player.setDirection(direction);
     }
@@ -96,9 +111,10 @@ public class World {
 
     public void bombExploded(Bomb b){
         Position pos = b.getPosition();
+        explosions.add(new Explosion(pos, Settings.EXPLOSION_EFFECT_DURATION));
         int start = Math.max(pos.x() - Settings.BOMB_RADIUS, 0);
-        int end = Math.min(pos.x() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE);
-        for(int i = pos.x(); i < end; ++i){
+        int end = Math.min(pos.x() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE-1);
+        for(int i = pos.x(); i <= end; ++i){
             Position cell = new Position(i, pos.y());
             if(!cell.equals(b.getPosition()) && stopAfterCell(cell))
                 break;
@@ -111,8 +127,8 @@ public class World {
         }
 
         start = Math.max(pos.y() - Settings.BOMB_RADIUS, 0);
-        end = Math.min(pos.y() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE);
-        for(int i = pos.y(); i < end; ++i){
+        end = Math.min(pos.y() + Settings.BOMB_RADIUS, Settings.WORLD_SIZE-1);
+        for(int i = pos.y(); i <= end; ++i){
             Position cell = new Position(pos.x(), i);
             if(!cell.equals(b.getPosition()) && stopAfterCell(cell))
                 break;
@@ -125,6 +141,7 @@ public class World {
     }
 
     private boolean stopAfterCell(Position pos){
+        if(getTypeAt(pos) != BlockType.WALL) explosions.add(new Explosion(pos, Settings.EXPLOSION_EFFECT_DURATION));
         if(bombs.get(pos) != null && !toRemoveBombs.contains(pos)){
             bombs.get(pos).explode();
             return true;
@@ -141,6 +158,10 @@ public class World {
 
     public Map<Position, Bomb> getBombs(){
         return bombs;
+    }
+
+    public List<Explosion> getExplosions(){
+        return explosions;
     }
 
     public BlockType getTypeAt(Position p){

@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class Settings {
     public static final int WINDOW_SIZE = 600;
-    public static final int CELL_WIDTH = 40;
-    public static final int WORLD_SIZE = WINDOW_SIZE / CELL_WIDTH;
+    public static final int WORLD_SIZE = 15;
+    public static final int CELL_WIDTH = WINDOW_SIZE / WORLD_SIZE;
 
     public static final int DIRECTION_LEFT = 0;
     public static final int DIRECTION_UP = 1;
@@ -26,4 +26,5 @@ public class Settings {
             Map.entry(KeyEvent.VK_DOWN, Settings.DIRECTION_DOWN),
             Map.entry(KeyEvent.VK_LEFT, Settings.DIRECTION_LEFT));
 
+    public static final int EXPLOSION_EFFECT_DURATION = 10;
 }

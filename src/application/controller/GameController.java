@@ -16,11 +16,13 @@ public class GameController extends KeyAdapter {
     GamePanel gamePanel;
     List<Integer> directions;
 
-    public GameController(GamePanel gamePanel){
-        this.gamePanel = gamePanel;
+    public GameController(){
         directions = new ArrayList<>();
     }
-
+    public void setGamePanel(GamePanel gamePanel){
+        this.gamePanel = gamePanel;
+        gamePanel.addKeyListener(this);
+    }
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
@@ -53,7 +55,11 @@ public class GameController extends KeyAdapter {
         return Settings.keyToDirections.containsKey(e.getKeyCode()) ? Settings.keyToDirections.get(e.getKeyCode()) : Settings.DIRECTION_IDLE;
     }
     public void update(){
-        Game.getInstance().update();
-        gamePanel.repaint();
+        try{
+            Game.getInstance().update();
+            gamePanel.repaint();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
