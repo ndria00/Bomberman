@@ -6,20 +6,16 @@ public class Player extends GameObject{
 
     private int direction;
     private int bombsLeft;
-    private boolean moving;
 
     public Player(Position position, int totalBombs){
         super(position);
         this.direction = Settings.DIRECTION_IDLE;
         this.bombsLeft = totalBombs;
-        this.moving = false;
     }
     public void move(Position position){
         this.setPosition(position);
     }
     public void setDirection(int direction) {
-        if(direction != Settings.DIRECTION_IDLE)
-            moving = true;
         this.direction = direction;
     }
     public int getBombsLeft(){
@@ -44,8 +40,5 @@ public class Player extends GameObject{
             default -> newPosition = playerPos;
         }
         return  newPosition;
-    }
-    public boolean isMoving(){
-        return moving;
     }
 }

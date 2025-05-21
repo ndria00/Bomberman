@@ -73,14 +73,13 @@ public class World {
         toRemoveBombs.clear();
     }
     public void movePlayer(){
-        if(player.isMoving()) {
-            Position posMove = player.simulateMove();
-            if (isPositionValid(posMove) && (grid[posMove.x()][posMove.y()] == BlockType.EMPTY || grid[posMove.x()][posMove.y()] == BlockType.BOMB)) {
-                grid[player.getPosition().x()][player.getPosition().y()] = BlockType.EMPTY;
-                player.move(posMove);
-                grid[posMove.x()][posMove.y()] = BlockType.PLAYER;
-            }
+        Position posMove = player.simulateMove();
+        if (isPositionValid(posMove) && (grid[posMove.x()][posMove.y()] == BlockType.EMPTY || grid[posMove.x()][posMove.y()] == BlockType.BOMB)) {
+            grid[player.getPosition().x()][player.getPosition().y()] = BlockType.EMPTY;
+            player.move(posMove);
+            grid[posMove.x()][posMove.y()] = BlockType.PLAYER;
         }
+
     }
     public void tickExplosions(){
         List<Explosion> toRemoveExplosions = new ArrayList<>();
