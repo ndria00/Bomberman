@@ -16,7 +16,7 @@ public class World {
     public World(){
         size = Settings.WORLD_SIZE;
         grid = new BlockType[size][size];
-        player = new Player(new Position(0,0));
+        player = new Player(new Position(0,0), 3);
         bombs = new HashMap<>();
         toRemoveBombs = new HashSet<>();
         createMap();

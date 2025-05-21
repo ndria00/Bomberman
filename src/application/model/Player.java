@@ -8,10 +8,10 @@ public class Player extends GameObject{
     private int bombsLeft;
     private boolean moving;
 
-    public Player(Position position){
+    public Player(Position position, int totalBombs){
         super(position);
         this.direction = Settings.DIRECTION_IDLE;
-        this.bombsLeft = 3;
+        this.bombsLeft = totalBombs;
         this.moving = false;
     }
     public void move(Position position){
