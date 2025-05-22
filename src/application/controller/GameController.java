@@ -30,7 +30,7 @@ public class GameController extends KeyAdapter {
         if(e.getKeyCode() == KeyEvent.VK_B)
             Game.getInstance().placeBomb();
         else if(Settings.keyToDirections.containsKey(e.getKeyCode())){
-            int direction = directionFromButton(e);
+            int direction =  Settings.keyToDirections.get(e.getKeyCode());
             if(!directions.contains(direction))
                 directions.add(direction);
             Game.getInstance().updatePlayerDirection(direction);
@@ -40,7 +40,7 @@ public class GameController extends KeyAdapter {
     @Override
     public void keyReleased(KeyEvent e) {
         if(Settings.keyToDirections.containsKey(e.getKeyCode())){
-            int direction = directionFromButton(e);
+            int direction =  Settings.keyToDirections.get(e.getKeyCode());
             directions.removeIf(n -> n == direction);
             if(directions.isEmpty()){;
                 Game.getInstance().updatePlayerDirection(Settings.DIRECTION_IDLE);
@@ -51,9 +51,6 @@ public class GameController extends KeyAdapter {
         }
     }
 
-    private int directionFromButton(KeyEvent e){
-        return Settings.keyToDirections.containsKey(e.getKeyCode()) ? Settings.keyToDirections.get(e.getKeyCode()) : Settings.DIRECTION_IDLE;
-    }
     public void update(){
         try{
             Game.getInstance().update();

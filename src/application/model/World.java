@@ -74,7 +74,7 @@ public class World {
     }
     public void movePlayer(){
         Position posMove = player.simulateMove();
-        if (isPositionValid(posMove) && (grid[posMove.x()][posMove.y()] == BlockType.EMPTY || grid[posMove.x()][posMove.y()] == BlockType.BOMB)) {
+        if (isPositionValid(posMove) && (grid[posMove.x()][posMove.y()] == BlockType.EMPTY)) {
             grid[player.getPosition().x()][player.getPosition().y()] = BlockType.EMPTY;
             player.move(posMove);
             grid[posMove.x()][posMove.y()] = BlockType.PLAYER;
